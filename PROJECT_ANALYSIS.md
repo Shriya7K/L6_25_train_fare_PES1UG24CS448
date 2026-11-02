@@ -46,7 +46,7 @@ RATE_PER_KM = {"SL": 1, "3A": 2, "2A": 3, "1A": 5}
 - **Purpose**: Computes the baseline ticket cost for a specific class and distance traveled.
 - **Validations**:
   - Validates `travel_class` against `RATE_PER_KM`. Raises `ValueError("unknown class")` if invalid.
-  - Validates `distance_km > 0`. Raises `ValueError("invalid distance")` if distance is $\le 0$.
+  - Validates `distance_km > 0`. Raises `ValueError("invalid distance")` if distance is <= 0.
 - **Minimum Fare Floor**: If calculated fare is below 50, it is rounded up to the minimum fare of 50.
 - **Return Value**: An integer or float representing the computed fare.
 
@@ -64,8 +64,8 @@ RATE_PER_KM = {"SL": 1, "3A": 2, "2A": 3, "1A": 5}
 ### 4.3 `tatkal_charge(travel_class, fare)`
 - **Purpose**: Calculates additional Tatkal premium charges based on travel class and base fare.
 - **Rules**:
-  - Sleeper (`travel_class == "SL"`): Rate is $10\%$ of fare (`fare // 10`).
-  - AC classes (`travel_class != "SL"`): Rate is $30\%$ of fare (`fare * 3 // 10`).
+  - Sleeper (`travel_class == "SL"`): Rate is 10% of fare (`fare // 10`).
+  - AC classes (`travel_class != "SL"`): Rate is 30% of fare (`fare * 3 // 10`).
   - Cap limits:
     - Maximum Tatkal charge: 400 (`charge > 400` capped to 400).
     - Minimum Tatkal charge: 100 (`charge < 100` capped to 100).
@@ -98,8 +98,8 @@ Total Binary Branches: **22**
 Initial execution using `test_train_fare.py` (which only contains 2 tests: `test_sleeper_fare` and `test_adult_no_concession`):
 - **Statements**: 31 total in `train_fare.py`
 - **Missing Statements**: 17 (Lines 6, 8, 11, 17, 19, 21, 23-25, 30-38)
-- **Line Coverage**: $45\%$
-- **Branch Coverage**: $40\%$ (7 partial branches, remaining untouched)
+- **Line Coverage**: 45%
+- **Branch Coverage**: 40% (7 partial branches, remaining untouched)
 - Untested areas:
   - Error handling for invalid class and negative/zero distance.
   - Base fare minimum capping below 50.
@@ -113,9 +113,9 @@ Initial execution using `test_train_fare.py` (which only contains 2 tests: `test
 
 1. **`base_fare`**:
    - Boundary distances: `0`, `-1`, `-0.01`, `1`, `49`, `50`, `51`.
-   - Low distance triggering floor fare: `distance_km = 10` in `SL` ($1 \times 10 = 10 \rightarrow 50$).
-   - Exact threshold distance: `distance_km = 50` in `SL` ($1 \times 50 = 50 \rightarrow 50$).
-   - Higher distance: `distance_km = 100` in `SL` ($100 \rightarrow 100$).
+   - Low distance triggering floor fare: `distance_km = 10` in `SL` (1 * 10 = 10 -> 50).
+   - Exact threshold distance: `distance_km = 50` in `SL` (1 * 50 = 50 -> 50).
+   - Higher distance: `distance_km = 100` in `SL` (100 -> 100).
    - Unknown classes: `"3E"`, `"General"`, `""`, `None`, `"AC"`.
    - Valid classes: `"SL"`, `"3A"`, `"2A"`, `"1A"`.
 
@@ -123,28 +123,28 @@ Initial execution using `test_train_fare.py` (which only contains 2 tests: `test
    - `is_tatkal = True` with age `3` (should be 0 despite age < 5).
    - `is_tatkal = True` with age `65` (should be 0 despite age >= 60).
    - Age boundaries:
-     - `age = 4`: Infant ($100\%$).
-     - `age = 5`: Child lower boundary ($50\%$).
-     - `age = 12`: Child upper boundary ($50\%$).
-     - `age = 13`: Adult lower boundary ($0\%$).
-     - `age = 59`: Adult upper boundary ($0\%$).
-     - `age = 60`: Senior citizen lower boundary ($50\%$ for `F`, $40\%$ for `M`).
-     - `age = 80`: Senior citizen ($50\%$ for `F`, $40\%$ for `M`).
+     - `age = 4`: Infant (100%).
+     - `age = 5`: Child lower boundary (50%).
+     - `age = 12`: Child upper boundary (50%).
+     - `age = 13`: Adult lower boundary (0%).
+     - `age = 59`: Adult upper boundary (0%).
+     - `age = 60`: Senior citizen lower boundary (50% for `F`, 40% for `M`).
+     - `age = 80`: Senior citizen (50% for `F`, 40% for `M`).
      - Gender variations: `"F"` vs `"M"`, `"Other"`.
 
 3. **`tatkal_charge`**:
    - Sleeper (`SL`):
-     - `fare = 500`: `500 // 10 = 50 < 100` $\rightarrow$ capped to `100`.
-     - `fare = 1000`: `1000 // 10 = 100` $\rightarrow$ exactly `100`.
-     - `fare = 2500`: `2500 // 10 = 250` $\rightarrow$ in range `250`.
-     - `fare = 4000`: `4000 // 10 = 400` $\rightarrow$ exactly `400`.
-     - `fare = 5000`: `5000 // 10 = 500 > 400` $\rightarrow$ capped to `400`.
+     - `fare = 500`: `500 // 10 = 50 < 100` -> capped to `100`.
+     - `fare = 1000`: `1000 // 10 = 100` -> exactly `100`.
+     - `fare = 2500`: `2500 // 10 = 250` -> in range `250`.
+     - `fare = 4000`: `4000 // 10 = 400` -> exactly `400`.
+     - `fare = 5000`: `5000 // 10 = 500 > 400` -> capped to `400`.
    - Non-Sleeper (`3A`, `2A`, `1A`):
-     - `fare = 200`: `200 * 3 // 10 = 60 < 100` $\rightarrow$ capped to `100`.
-     - `fare = 334`: `334 * 3 // 10 = 100` $\rightarrow$ exactly `100`.
-     - `fare = 1000`: `1000 * 3 // 10 = 300` $\rightarrow$ in range `300`.
-     - `fare = 1334`: `1334 * 3 // 10 = 400` $\rightarrow$ exactly `400`.
-     - `fare = 2000`: `2000 * 3 // 10 = 600 > 400` $\rightarrow$ capped to `400`.
+     - `fare = 200`: `200 * 3 // 10 = 60 < 100` -> capped to `100`.
+     - `fare = 334`: `334 * 3 // 10 = 100` -> exactly `100`.
+     - `fare = 1000`: `1000 * 3 // 10 = 300` -> in range `300`.
+     - `fare = 1334`: `1334 * 3 // 10 = 400` -> exactly `400`.
+     - `fare = 2000`: `2000 * 3 // 10 = 600 > 400` -> capped to `400`.
 
 ---
 

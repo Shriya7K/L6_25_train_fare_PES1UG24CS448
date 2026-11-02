@@ -101,8 +101,8 @@ coverage report -m
 
 | Metric | Target Requirement | Baseline Achieved | Final Achieved | Status |
 | :--- | :---: | :---: | :---: | :---: |
-| **Code / Line Coverage** | $\ge 90\%$ | 45% | **100%** | **PASSED (EXCEEDED)** |
-| **Branch Coverage** | $\ge 90\%$ | 40% | **100%** | **PASSED (EXCEEDED)** |
+| **Code / Line Coverage** | >= 90% | 45% | **100%** | **PASSED (EXCEEDED)** |
+| **Branch Coverage** | >= 90% | 40% | **100%** | **PASSED (EXCEEDED)** |
 | **Statements Covered** | - | 14 / 31 | **31 / 31** | **100%** |
 | **Branches Covered** | - | 7 / 22 | **22 / 22** | **100%** |
 | **Total Test Cases** | - | 2 | **45** | **ALL PASSED** |
