@@ -131,9 +131,38 @@ Authentic terminal screenshots showing real command executions and coverage repo
    - Path: `evidence/branch_coverage_result.png`
    - Content: Shows execution of `coverage run --branch -m pytest BranchCoverageTest_PES1UG24CS448_train_fare.py` and `coverage report -m`, verifying 100% branch coverage (22/22 branches).
 
+3. **Lab 7 Fuzz Testing Evidence**:
+   - Paths: `evidence/lab7_01_original_processor_execution.png`, `evidence/lab7_02_initial_hypothesis_test_failures.png`, `evidence/lab7_03_fixed_processor_execution.png`, `evidence/lab7_04_final_pytest_success.png`
+   - Report PDF: `Lab 7/Lab 7 - Fuzzing for Input Validation Bugs.pdf`
+
 ---
 
-## 9. Repository Structure
+## 9. Lab 7: Fuzz Testing for Input Validation Bugs
+
+### 9.1 Overview
+Lab 7 explores property-based fuzz testing using the `Hypothesis` library to detect unhandled crashes, missing type validations, and boundary vulnerabilities in the train fare system modules (`parse_pnr`, `journey_distance`, and `berth_type`).
+
+### 9.2 Execution Instructions
+Navigate to the `Lab 7` directory:
+```bash
+cd "Lab 7"
+```
+
+Run the application:
+```bash
+python processor.py
+```
+
+Run property-based fuzz tests:
+```bash
+python -m pytest test_processor.py -v
+```
+
+All 9 Hypothesis tests pass, validating that functions are robust against unexpected types, malformed strings, and boundary values while preserving expected domain functionality.
+
+---
+
+## 10. Repository Structure
 
 ```
 L6_L7_25_train_fare/
@@ -146,13 +175,25 @@ L6_L7_25_train_fare/
 │   ├── pytest.ini                                     # Pytest configuration for test discovery
 │   └── README.md                                      # Lab 6 specific notes
 │
+├── Lab 7/
+│   ├── processor.py                                   # Hardened application with input validation
+│   ├── test_processor.py                              # Completed Hypothesis fuzz tests
+│   ├── train_fare.py                                  # Hardened calculation module
+│   ├── test_train_fare.py                             # Completed Hypothesis fuzz tests
+│   ├── Lab 7 - Fuzzing for Input Validation Bugs.pdf  # Comprehensive report with evidence screenshots
+│   └── README.md                                      # Lab 7 specific notes
+│
 ├── evidence/
 │   ├── code_coverage_result.png                       # Terminal output for code coverage
-│   └── branch_coverage_result.png                     # Terminal output for branch coverage
+│   ├── branch_coverage_result.png                     # Terminal output for branch coverage
+│   ├── lab7_01_original_processor_execution.png       # Original application execution
+│   ├── lab7_02_initial_hypothesis_test_failures.png   # Initial fuzz test failures
+│   ├── lab7_03_fixed_processor_execution.png          # Hardened application execution
+│   └── lab7_04_final_pytest_success.png               # Final passing test execution
 │
 ├── COVERAGE_ANALYSIS.md                               # Detailed coverage analysis & concepts
 ├── PROJECT_ANALYSIS.md                                # Initial code analysis document
-├── requirements.txt                                   # Python dependencies (pytest, coverage)
+├── requirements.txt                                   # Python dependencies (pytest, coverage, hypothesis)
 ├── pytest.ini                                         # Global test runner configuration
 ├── .gitignore                                         # Git ignore specifications
 └── README.md                                          # Complete project documentation
