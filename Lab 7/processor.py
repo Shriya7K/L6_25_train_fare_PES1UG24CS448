@@ -1,5 +1,16 @@
 BERTHS = ["SU", "LB", "MB", "UB", "LB", "MB", "UB", "SL"]
 
+# Maximum allowed digit lengths to safely prevent integer string conversion overflow
+MAX_DISTANCE_DIGITS = 10
+MAX_SEAT_DIGITS = 6
+
+
+def _is_ascii_digits(val):
+    """Returns True if val is a non-empty string consisting solely of ASCII digits 0-9."""
+    if not isinstance(val, str) or not val:
+        return False
+    return all('0' <= ch <= '9' for ch in val)
+
 
 def parse_pnr(pnr):
     """
@@ -11,9 +22,13 @@ def parse_pnr(pnr):
     if not isinstance(pnr, str):
         return None
     pnr = pnr.strip()
-    if len(pnr) != 10 or not pnr.isdigit():
+    # Must be exactly 10 ASCII decimal digits
+    if len(pnr) != 10 or not _is_ascii_digits(pnr):
         return None
-    return int(pnr[0]), int(pnr[1:])
+    try:
+        return int(pnr[0]), int(pnr[1:])
+    except (ValueError, TypeError):
+        return None
 
 
 def journey_distance(distances_csv):
@@ -33,9 +48,14 @@ def journey_distance(distances_csv):
     distances = []
     for part in parts:
         cleaned = part.strip()
-        if not cleaned or not cleaned.isdigit():
+        # Must be non-empty ASCII digits within safe length limits
+        if not _is_ascii_digits(cleaned) or len(cleaned) > MAX_DISTANCE_DIGITS:
             return None
-        distances.append(int(cleaned))
+        try:
+            val = int(cleaned)
+        except (ValueError, TypeError):
+            return None
+        distances.append(val)
     if distances[-1] < distances[0]:
         return None
     return distances[-1] - distances[0]
@@ -56,13 +76,19 @@ def berth_type(seat):
     parts = seat.split('-')
     if len(parts) != 2:
         return None
-    coach = parts[0].strip()
-    number_str = parts[1].strip()
+    coach = parts[0]
+    number_str = parts[1]
     if not coach or not coach.isalnum():
         return None
-    if not number_str or not number_str.isdigit():
+    # Coach must be ASCII alphanumeric
+    if not all(ch.isascii() and ch.isalnum() for ch in coach):
         return None
-    number = int(number_str)
+    if not _is_ascii_digits(number_str) or len(number_str) > MAX_SEAT_DIGITS:
+        return None
+    try:
+        number = int(number_str)
+    except (ValueError, TypeError):
+        return None
     if number <= 0:
         return None
     return coach.upper(), BERTHS[number % 8]

@@ -177,11 +177,8 @@ L6_L7_25_train_fare/
 │
 ├── Lab 7/
 │   ├── processor.py                                   # Hardened application with input validation
-│   ├── test_processor.py                              # Completed Hypothesis fuzz tests
-│   ├── train_fare.py                                  # Hardened calculation module
-│   ├── test_train_fare.py                             # Completed Hypothesis fuzz tests
-│   ├── Lab 7 - Fuzzing for Input Validation Bugs.pdf  # Comprehensive report with evidence screenshots
-│   └── README.md                                      # Lab 7 specific notes
+│   ├── test_processor.py                              # Completed Hypothesis fuzz tests (16 tests)
+│   └── Lab 7 - Fuzzing for Input Validation Bugs.pdf  # Comprehensive report with evidence screenshots
 │
 ├── evidence/
 │   ├── code_coverage_result.png                       # Terminal output for code coverage
